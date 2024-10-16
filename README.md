@@ -123,4 +123,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 Contributions are welcome! Please submit a pull request for any enhancements or bug fixes.
 
 ## Contact
-For any inquiries, feedback, or collaboration opportunities, please feel free to reach out via email at [alshwwhy212@example.com](mailto:alshwwhy212@example.com). I look forward to connecting with you!
+For any inquiries, feedback, or collaboration opportunities, please feel free to reach out via email at [alshwwhy212@example.com](mailto:alshwwhy212@gmail.com). I look forward to connecting with you!
