@@ -79,7 +79,7 @@ This project is an Order Processing System built with Flask, using MongoDB Atlas
 
 5. **Run the application:**
    ```bash
-   python src/app.py
+   python app.py
    ```
 
 ## Usage
