@@ -3,11 +3,11 @@ from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
 import os
 from dotenv import load_dotenv
-from controllers.auth_controller import auth_bp, init_app
-from controllers.payment_controller import payment_bp
-from controllers.order_controller import order_bp
+from src.controllers.auth_controller import auth_bp, init_app
+from src.controllers.payment_controller import payment_bp
+from src.controllers.order_controller import order_bp
 from flask_mail import Mail
-from middlewares.errors import ErrorHandlers
+from src.middlewares.errors import ErrorHandlers
 import logging
 
 load_dotenv()

@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from utils.payment_processor import process_payment
-from utils.sendMail import send_confirmation_email
-from middlewares.orderMiddlewares import load_products, update_stock
+from ..utils.payment_processor import process_payment
+from ..utils.sendMail import send_confirmation_email
+from ..middlewares.orderMiddlewares import load_products, update_stock
 
 payment_bp = Blueprint('payment_bp', __name__)
 

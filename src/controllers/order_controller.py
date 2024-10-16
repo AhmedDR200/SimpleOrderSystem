@@ -1,7 +1,7 @@
 import uuid
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from middlewares.orderMiddlewares import check_stock, load_products, update_stock
+from ..middlewares.orderMiddlewares import check_stock, load_products, update_stock
 
 order_bp = Blueprint('order_bp', __name__)
 
