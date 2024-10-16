@@ -4,7 +4,6 @@
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat-square&logo=jsonwebtokens)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=ffffff)
 
-```markdown
 # Order Processing System API
 
 This project is an Order Processing System built with Flask, using MongoDB Atlas for data storage, Flask-JWT-Extended for authentication, and Flask-Mail for sending order confirmation emails. The application is designed to manage stock, process payments.
