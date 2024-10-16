@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from utils.payment_processor import process_payment
 from utils.sendMail import send_confirmation_email
 from middlewares.orderMiddlewares import load_products, update_stock
@@ -7,6 +8,7 @@ payment_bp = Blueprint('payment_bp', __name__)
 
 # Route to process payment for a specific order
 @payment_bp.route('/payment', methods=['POST'])
+@jwt_required()
 def process_order_payment():
     data = request.json
     order_id = data.get('order_id')
@@ -30,7 +32,7 @@ def process_order_payment():
         send_confirmation_email(order_id, email, [{"product_id": product_id, "quantity": quantity}], total)
 
         return jsonify({
-            'message': 'Payment processed successfully.',
+            'message': 'Payment processed successfully, Email sent to you for confirmation',
             'transaction_id': payment_result['transaction_id']
         }), 200
 

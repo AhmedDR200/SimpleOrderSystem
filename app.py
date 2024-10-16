@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
 import os
 from dotenv import load_dotenv
@@ -12,7 +13,8 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = os.getenv('MONGODB_URI')
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+jwt = JWTManager(app)
 
 # Mail Configuration
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
