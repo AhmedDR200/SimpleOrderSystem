@@ -3,7 +3,9 @@ from flask_pymongo import PyMongo
 import os
 from dotenv import load_dotenv
 from controllers.auth_controller import auth_bp, init_app
-from errors import not_found, bad_request, unauthorized, internal_error, handle_exception
+from controllers.order_controller import order_bp
+from flask_mail import Mail
+from middlewares.errors import ErrorHandlers
 
 load_dotenv()
 
@@ -11,24 +13,35 @@ app = Flask(__name__)
 app.config['MONGO_URI'] = os.getenv('MONGODB_URI')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+# Mail Configuration
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+
+# Initialize MongoDB
 mongo = PyMongo(app)
 
 # Initialize the auth controller with MongoDB instance
 init_app(mongo)
+# Initialize Mail
+mail = Mail(app)
 
 # Register the auth blueprint
 app.register_blueprint(auth_bp)
+app.register_blueprint(order_bp)
 
 @app.route('/')
 def home():
-    return jsonify(message="Welcome to the User API")
+    return jsonify(message="Welcome to the Order Processing API")
 
-# Custom error handler for 404 Not Found
-app.errorhandler(404)(not_found)
-app.errorhandler(400)(bad_request)
-app.errorhandler(401)(unauthorized)
-app.errorhandler(500)(internal_error)
-app.errorhandler(Exception)(handle_exception)
+# Register the error handlers
+app.register_error_handler(404, ErrorHandlers.not_found)
+app.register_error_handler(400, ErrorHandlers.bad_request)
+app.register_error_handler(401, ErrorHandlers.unauthorized)
+app.register_error_handler(500, ErrorHandlers.internal_error)
+app.register_error_handler(Exception, ErrorHandlers.handle_exception)
 
 if __name__ == '__main__':
     app.run(debug=True)
