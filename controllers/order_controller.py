@@ -1,8 +1,6 @@
 import uuid
 from flask import Blueprint, request, jsonify
-from middlewares.orderMiddlewares import check_stock, update_stock, load_products
-from utils.sendMail import send_confirmation_email
-from utils.payment_processor import process_payment
+from middlewares.orderMiddlewares import check_stock, load_products, update_stock
 
 order_bp = Blueprint('order_bp', __name__)
 
@@ -12,32 +10,33 @@ def place_order():
     data = request.json
     product_id = data.get('product_id')
     quantity = data.get('quantity')
-    email = data.get('email')
-    payment_method = data.get('payment_method', 'credit_card') 
 
+    # Load products to get the price
+    products = load_products()
+
+    # Check if the product exists and if there is sufficient stock
     if not check_stock(product_id, quantity):
-        return jsonify({'message': 'The Product is out of Stock !'}), 400
+        return jsonify({'message': 'The Product is out of Stock!'}), 400
+
+    # Find the product in the loaded products
+    product = next((product for product in products if product['id'] == product_id), None)
+
+    if not product:
+        return jsonify({'message': 'Product not found!'}), 404
+
+    # Calculate total amount
+    total = product['price'] * quantity
 
     # Generate a dynamic order ID
     order_id = str(uuid.uuid4())
 
-    # Calculate total
-    total = load_products()[0]['price'] * quantity
+    # Update stock after placing the order
+    update_stock(product_id, quantity)
 
-    # Process payment
-    payment_result = process_payment(total, payment_method)
-
-    if payment_result['success']:
-        # Update stock
-        update_stock(product_id, quantity)
-
-        # Send confirmation email
-        send_confirmation_email(order_id, email, [{"product_id": product_id, "quantity": quantity}], total)
-
-        return jsonify({
-            'message': 'Order placed successfully, confirmation email sent.',
-            'order_id': order_id,
-            'transaction_id': payment_result['transaction_id']
-        }), 201
-
-    return jsonify({'message': payment_result['message']}), 500
+    return jsonify({
+        'message': 'Order placed successfully. Please proceed to payment.',
+        'order_id': order_id,
+        'product_id': product_id,
+        'quantity': quantity,
+        'total': total
+    }), 201

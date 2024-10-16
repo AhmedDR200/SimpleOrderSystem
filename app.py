@@ -3,6 +3,7 @@ from flask_pymongo import PyMongo
 import os
 from dotenv import load_dotenv
 from controllers.auth_controller import auth_bp, init_app
+from controllers.payment_controller import payment_bp
 from controllers.order_controller import order_bp
 from flask_mail import Mail
 from middlewares.errors import ErrorHandlers
@@ -31,6 +32,7 @@ mail = Mail(app)
 # Register the auth blueprint
 app.register_blueprint(auth_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(payment_bp)
 
 @app.route('/')
 def home():
