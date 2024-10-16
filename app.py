@@ -8,6 +8,7 @@ from controllers.payment_controller import payment_bp
 from controllers.order_controller import order_bp
 from flask_mail import Mail
 from middlewares.errors import ErrorHandlers
+import logging
 
 load_dotenv()
 
@@ -28,8 +29,19 @@ mongo = PyMongo(app)
 
 # Initialize the auth controller with MongoDB instance
 init_app(mongo)
+
 # Initialize Mail
 mail = Mail(app)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',  
+    handlers=[
+        logging.FileHandler("app.log"), 
+        logging.StreamHandler()
+    ]
+)
 
 # Register the auth blueprint
 app.register_blueprint(auth_bp)
@@ -38,6 +50,7 @@ app.register_blueprint(payment_bp)
 
 @app.route('/')
 def home():
+    app.logger.info("Home route accessed")
     return jsonify(message="Welcome to the Order Processing API")
 
 # Register the error handlers
